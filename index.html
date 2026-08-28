@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday! ✨</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      scroll-behavior: smooth;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background: #05050a;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    /* Floating Music Control Bar */
+    .audio-player-bar {
+      position: fixed;
+      top: 25px;
+      right: 25px;
+      z-index: 1000;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 50px;
+      padding: 8px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 15px rgba(244, 114, 182, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .audio-player-bar:hover {
+      background: rgba(30, 41, 59, 0.9);
+      border-color: rgba(244, 114, 182, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .play-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ec4899, #8b5cf6);
+      border: none;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+      transition: transform 0.2s ease;
+    }
+
+    .play-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .audio-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .audio-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #f472b6;
+      letter-spacing: 0.5px;
+    }
+
+    .audio-status {
+      font-size: 0.7rem;
+      color: #94a3b8;
+    }
+
+    /* Floating Particles Canvas */
+    #particles-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* SECTION 1: Full-Screen Hero Experience */
+    .hero-slider {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out, transform 2.5s cubic-bezier(0.25, 1, 0.5, 1);
+      transform: scale(1.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Full image visible using object-fit: contain with ambient blurred background */
+    .slide-bg-blur {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      filter: blur(40px) brightness(0.35);
+      transform: scale(1.2);
+    }
+
+    .slide img {
+      position: relative;
+      z-index: 2;
+      max-width: 100%;
+      max-height: 100vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.8));
+    }
+
+    /* Hero Vignette & Gradient Overlay */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(5,5,10,0.2) 0%, rgba(5,5,10,0.7) 70%, rgba(5,5,10,0.95) 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      text-align: center;
+      padding: 60px 20px;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      pointer-events: auto;
+      max-width: 900px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: linear-gradient(90deg, rgba(236,72,153,0.2), rgba(139,92,246,0.2));
+      border: 1px solid rgba(244, 114, 182, 0.4);
+      padding: 8px 24px;
+      border-radius: 50px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      color: #f472b6;
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+      animation: pulseGlow 2.5s infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      0% { transform: scale(1); box-shadow: 0 0 15px rgba(236,72,153,0.3); }
+      100% { transform: scale(1.05); box-shadow: 0 0 30px rgba(236,72,153,0.6); }
+    }
+
+    .hero-title {
+      font-family: 'Cinzel', serif;
+      font-size: 4.8rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      background: linear-gradient(135deg, #ffffff 20%, #f472b6 60%, #fb7185 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 10px 40px rgba(0,0,0,0.9);
+      line-height: 1.15;
+      margin-bottom: 15px;
+    }
+
+    .hero-subtitle {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.4rem;
+      color: #38bdf8;
+      margin-bottom: 30px;
+      text-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
+    }
+
+    .btn-celebrate {
+      background: linear-gradient(135deg, #ec4899, #8b5cf6);
+      border: none;
+      color: white;
+      padding: 16px 42px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(236, 72, 153, 0.5);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .btn-celebrate:hover {
+      transform: translateY(-4px) scale(1.06);
+      box-shadow: 0 18px 45px rgba(236, 72, 153, 0.8);
+    }
+
+    /* SECTION 2: Complete Photo Showcase (100% Full View Grid) */
+    .section-gallery {
+      max-width: 1400px;
+      margin: 100px auto 80px auto;
+      padding: 0 25px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #38bdf8, #c084fc, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+
+    .section-desc {
+      color: #94a3b8;
+      font-size: 1.1rem;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+    }
+
+    .photo-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 16px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      transition: all 0.4s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .photo-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(244, 114, 182, 0.5);
+      box-shadow: 0 25px 50px rgba(236, 72, 153, 0.3);
+    }
+
+    .photo-wrapper {
+      width: 100%;
+      height: 420px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #000;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .photo-card-bg-blur {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      filter: blur(30px) brightness(0.4);
+      transform: scale(1.2);
+    }
+
+    .photo-wrapper img {
+      position: relative;
+      z-index: 2;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      transition: transform 0.6s ease;
+    }
+
+    .photo-card:hover .photo-wrapper img {
+      transform: scale(1.04);
+    }
+
+    .card-caption {
+      margin-top: 18px;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #e2e8f0;
+      text-align: center;
+    }
+
+    /* SECTION 3: Wishes Card */
+    .wish-box {
+      max-width: 900px;
+      margin: 80px auto 120px auto;
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 32px;
+      padding: 50px 40px;
+      text-align: center;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+      position: relative;
+      z-index: 2;
+    }
+
+    .wish-box h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 2.4rem;
+      color: #f472b6;
+      margin-bottom: 20px;
+    }
+
+    .wish-box p {
+      color: #cbd5e1;
+      font-size: 1.15rem;
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-title { font-size: 2.8rem; }
+      .hero-subtitle { font-size: 1.8rem; }
+      .photo-wrapper { height: 320px; }
+      .wish-box { padding: 30px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="audio-player-bar">
+    <button class="play-btn" id="playBtn" onclick="toggleAudio()">▶</button>
+    <div class="audio-info">
+      <span class="audio-title">Birthday Track</span>
+      <span class="audio-status" id="audioStatus">Click to play track</span>
+    </div>
+  </div>
+
+  <audio id="bg-music" loop>
+    <source src="file:///C:/Users/ASUS/Downloads/leberch-happy-birthday-581704.mp3" type="audio/mpeg">
+  </audio>
+
+  <canvas id="particles-canvas"></canvas>
+
+  <section class="hero-slider">
+    <div class="slide active">
+      <div class="slide-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933790/xsn9vzbfq5jc8nr3alhf.jpg');"></div>
+      <img src="https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933790/xsn9vzbfq5jc8nr3alhf.jpg" alt="Memory 1">
+    </div>
+    <div class="slide">
+      <div class="slide-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933792/a0t4skp0r8dzxo8qz6al.jpg');"></div>
+      <img src="https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933792/a0t4skp0r8dzxo8qz6al.jpg" alt="Memory 2">
+    </div>
+    <div class="slide">
+      <div class="slide-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933792/uugjskqv31ezuvrjhbjf.jpg');"></div>
+      <img src="https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933792/uugjskqv31ezuvrjhbjf.jpg" alt="Memory 3">
+    </div>
+    <div class="slide">
+      <div class="slide-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933792/dno8g6acuwyy3lf7b7v3.jpg');"></div>
+      <img src="https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933792/dno8g6acuwyy3lf7b7v3.jpg" alt="Memory 4">
+    </div>
+    <div class="slide">
+      <div class="slide-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933794/tcm7nkvqzistwtqex610.jpg');"></div>
+      <img src="https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933794/tcm7nkvqzistwtqex610.jpg" alt="Memory 5">
+    </div>
+
+    <div class="hero-overlay">
+      <div class="hero-content">
+        <span class="hero-badge">Special Birthday Celebration</span>
+        <h1 class="hero-title">HAPPY BIRTHDAY!</h1>
+        <p class="hero-subtitle">May your day be filled with joy, love, and wonderful moments ✨</p>
+        <button class="btn-celebrate" onclick="triggerFireworks()">Celebrate Now 🎉</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-gallery">
+    <div class="section-header">
+      <h2 class="section-title">Captured Memories ✨</h2>
+      <p class="section-desc">Every picture tells a beautiful story. Full image view guaranteed!</p>
+    </div>
+
+    <div class="gallery-grid">
+      <div class="photo-card">
+        <div class="photo-wrapper">
+          <div class="photo-card-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933790/xsn9vzbfq5jc8nr3alhf.jpg');"></div>
+          <img src="https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933790/xsn9vzbfq5jc8nr3alhf.jpg" alt="Photo 1">
+        </div>
+        <div class="card-caption">Unforgettable Moments ✨</div>
+      </div>
+
+      <div class="photo-card">
+        <div class="photo-wrapper">
+          <div class="photo-card-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933792/a0t4skp0r8dzxo8qz6al.jpg');"></div>
+          <img src="https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933792/a0t4skp0r8dzxo8qz6al.jpg" alt="Photo 2">
+        </div>
+        <div class="card-caption">Brightest Smiles 🌟</div>
+      </div>
+
+      <div class="photo-card">
+        <div class="photo-wrapper">
+          <div class="photo-card-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933792/uugjskqv31ezuvrjhbjf.jpg');"></div>
+          <img src="https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933792/uugjskqv31ezuvrjhbjf.jpg" alt="Photo 3">
+        </div>
+        <div class="card-caption">Cheers to New Journey 🥂</div>
+      </div>
+
+      <div class="photo-card">
+        <div class="photo-wrapper">
+          <div class="photo-card-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933792/dno8g6acuwyy3lf7b7v3.jpg');"></div>
+          <img src="https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933792/dno8g6acuwyy3lf7b7v3.jpg" alt="Photo 4">
+        </div>
+        <div class="card-caption">Golden Memories 💫</div>
+      </div>
+
+      <div class="photo-card">
+        <div class="photo-wrapper">
+          <div class="photo-card-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933794/tcm7nkvqzistwtqex610.jpg');"></div>
+          <img src="https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933794/tcm7nkvqzistwtqex610.jpg" alt="Photo 5">
+        </div>
+        <div class="card-caption">Keep Shining Always ⭐</div>
+      </div>
+
+      <div class="photo-card">
+        <div class="photo-wrapper">
+          <div class="photo-card-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933794/i8z2yiwg8j6h17thkaz6.jpg');"></div>
+          <img src="https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933794/i8z2yiwg8j6h17thkaz6.jpg" alt="Photo 6">
+        </div>
+        <div class="card-caption">Beautiful Days 🌸</div>
+      </div>
+
+      <div class="photo-card">
+        <div class="photo-wrapper">
+          <div class="photo-card-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933794/s6ldumkbggcrlqqn7wy6.jpg');"></div>
+          <img src="https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933794/s6ldumkbggcrlqqn7wy6.jpg" alt="Photo 7">
+        </div>
+        <div class="card-caption">Special Moments 💕</div>
+      </div>
+
+      <div class="photo-card">
+        <div class="photo-wrapper">
+          <div class="photo-card-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933796/gdmklax8ikir5t8jby6a.jpg');"></div>
+          <img src="https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933796/gdmklax8ikir5t8jby6a.jpg" alt="Photo 8">
+        </div>
+        <div class="card-caption">Forever Cherished 💖</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wish-box">
+    <h2>A Special Wish For You 💖</h2>
+    <p>
+      May your path always be guided by light, and may every dream you pursue turn into reality. 
+      Thank you for bringing so much brightness into our lives. Have an incredible birthday filled with endless laughter, joy, and peace! 🎂🎁
+    </p>
+  </section>
+
+  <script>
+    // 1. Auto Slider (Rotates every 3.8 seconds)
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.hero-slider .slide');
+
+    function nextSlide() {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (currentSlide + 1) % slides.length;
+      slides[currentSlide].classList.add('active');
+    }
+    let autoSlideTimer = setInterval(nextSlide, 3800);
+
+    // 2. Audio Player with custom MP3 File
+    const audio = document.getElementById('bg-music');
+    const playBtn = document.getElementById('playBtn');
+    const audioStatus = document.getElementById('audioStatus');
+    let isPlaying = false;
+
+    function toggleAudio() {
+      if (isPlaying) {
+        audio.pause();
+        playBtn.innerText = "▶";
+        audioStatus.innerText = "Paused";
+      } else {
+        audio.play().then(() => {
+          playBtn.innerText = "❚❚";
+          audioStatus.innerText = "Playing Birthday Music 🎶";
+        }).catch(err => {
+          console.log("Audio play error:", err);
+        });
+      }
+      isPlaying = !isPlaying;
+    }
+
+    // Auto attempt play on first click anywhere (Browser Auto-play policy compatibility)
+    document.body.addEventListener('click', () => {
+      if (!isPlaying) {
+        audio.play().then(() => {
+          isPlaying = true;
+          playBtn.innerText = "❚❚";
+          audioStatus.innerText = "Playing Birthday Music 🎶";
+        }).catch(() => {});
+      }
+    }, { once: true });
+
+    // 3. Canvas Confetti Fireworks
+    function triggerFireworks() {
+      var duration = 3.5 * 1000;
+      var animationEnd = Date.now() + duration;
+
+      (function frame() {
+        confetti({
+          particleCount: 8,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0, y: 0.7 }
+        });
+        confetti({
+          particleCount: 8,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1, y: 0.7 }
+        });
+
+        if (Date.now() < animationEnd) {
+          requestAnimationFrame(frame);
+        }
+      })();
+    }
+
+    // Auto Confetti Burst on Page Load
+    window.onload = () => {
+      triggerFireworks();
+    };
+
+    // 4. Smooth Floating Particles Animation
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.8;
+        this.speedX = Math.random() * 0.4 - 0.2;
+        this.speedY = Math.random() * 0.4 - 0.2;
+        this.opacity = Math.random() * 0.5 + 0.2;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      }
+      draw() {
+        ctx.fillStyle = `rgba(244, 114, 182, ${this.opacity})`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < 70; i++) {
+      particles.push(new Particle());
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+  </script>
+</body>
+</html>
