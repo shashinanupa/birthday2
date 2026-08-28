@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Happy Birthday! ✨</title>
   
+  <!-- Premium Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
   
+  <!-- Canvas Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
@@ -359,6 +361,7 @@
 </head>
 <body>
 
+  <!-- Floating Audio Player Bar -->
   <div class="audio-player-bar">
     <button class="play-btn" id="playBtn" onclick="toggleAudio()">▶</button>
     <div class="audio-info">
@@ -367,34 +370,43 @@
     </div>
   </div>
 
+  <!-- Audio Element with Cloudinary MP3 Direct Link -->
   <audio id="bg-music" loop>
-    <source src="file:///C:/Users/ASUS/Downloads/leberch-happy-birthday-581704.mp3" type="audio/mpeg">
+    <source src="https://res.cloudinary.com/gvyfgz8p/video/upload/v1787934314/lji3io0bgh5v5pbdbk5k.mp3" type="audio/mpeg">
   </audio>
 
+  <!-- Particle Effect -->
   <canvas id="particles-canvas"></canvas>
 
+  <!-- SECTION 1: Full-Screen Slider -->
   <section class="hero-slider">
+    <!-- Slide 1 -->
     <div class="slide active">
       <div class="slide-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933790/xsn9vzbfq5jc8nr3alhf.jpg');"></div>
       <img src="https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933790/xsn9vzbfq5jc8nr3alhf.jpg" alt="Memory 1">
     </div>
+    <!-- Slide 2 -->
     <div class="slide">
       <div class="slide-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933792/a0t4skp0r8dzxo8qz6al.jpg');"></div>
       <img src="https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933792/a0t4skp0r8dzxo8qz6al.jpg" alt="Memory 2">
     </div>
+    <!-- Slide 3 -->
     <div class="slide">
       <div class="slide-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933792/uugjskqv31ezuvrjhbjf.jpg');"></div>
       <img src="https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933792/uugjskqv31ezuvrjhbjf.jpg" alt="Memory 3">
     </div>
+    <!-- Slide 4 -->
     <div class="slide">
       <div class="slide-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933792/dno8g6acuwyy3lf7b7v3.jpg');"></div>
       <img src="https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933792/dno8g6acuwyy3lf7b7v3.jpg" alt="Memory 4">
     </div>
+    <!-- Slide 5 -->
     <div class="slide">
       <div class="slide-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933794/tcm7nkvqzistwtqex610.jpg');"></div>
       <img src="https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933794/tcm7nkvqzistwtqex610.jpg" alt="Memory 5">
     </div>
 
+    <!-- Overlay Controls & Wishes -->
     <div class="hero-overlay">
       <div class="hero-content">
         <span class="hero-badge">Special Birthday Celebration</span>
@@ -405,6 +417,7 @@
     </div>
   </section>
 
+  <!-- SECTION 2: 100% Full View Photo Gallery -->
   <section class="section-gallery">
     <div class="section-header">
       <h2 class="section-title">Captured Memories ✨</h2>
@@ -412,6 +425,7 @@
     </div>
 
     <div class="gallery-grid">
+      <!-- Photo 1 -->
       <div class="photo-card">
         <div class="photo-wrapper">
           <div class="photo-card-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933790/xsn9vzbfq5jc8nr3alhf.jpg');"></div>
@@ -420,6 +434,7 @@
         <div class="card-caption">Unforgettable Moments ✨</div>
       </div>
 
+      <!-- Photo 2 -->
       <div class="photo-card">
         <div class="photo-wrapper">
           <div class="photo-card-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933792/a0t4skp0r8dzxo8qz6al.jpg');"></div>
@@ -428,6 +443,7 @@
         <div class="card-caption">Brightest Smiles 🌟</div>
       </div>
 
+      <!-- Photo 3 -->
       <div class="photo-card">
         <div class="photo-wrapper">
           <div class="photo-card-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933792/uugjskqv31ezuvrjhbjf.jpg');"></div>
@@ -436,6 +452,7 @@
         <div class="card-caption">Cheers to New Journey 🥂</div>
       </div>
 
+      <!-- Photo 4 -->
       <div class="photo-card">
         <div class="photo-wrapper">
           <div class="photo-card-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933792/dno8g6acuwyy3lf7b7v3.jpg');"></div>
@@ -444,6 +461,7 @@
         <div class="card-caption">Golden Memories 💫</div>
       </div>
 
+      <!-- Photo 5 -->
       <div class="photo-card">
         <div class="photo-wrapper">
           <div class="photo-card-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933794/tcm7nkvqzistwtqex610.jpg');"></div>
@@ -452,6 +470,7 @@
         <div class="card-caption">Keep Shining Always ⭐</div>
       </div>
 
+      <!-- Photo 6 -->
       <div class="photo-card">
         <div class="photo-wrapper">
           <div class="photo-card-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933794/i8z2yiwg8j6h17thkaz6.jpg');"></div>
@@ -460,6 +479,7 @@
         <div class="card-caption">Beautiful Days 🌸</div>
       </div>
 
+      <!-- Photo 7 -->
       <div class="photo-card">
         <div class="photo-wrapper">
           <div class="photo-card-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933794/s6ldumkbggcrlqqn7wy6.jpg');"></div>
@@ -468,6 +488,7 @@
         <div class="card-caption">Special Moments 💕</div>
       </div>
 
+      <!-- Photo 8 -->
       <div class="photo-card">
         <div class="photo-wrapper">
           <div class="photo-card-bg-blur" style="background-image: url('https://res.cloudinary.com/gvyfgz8p/image/upload/v1787933796/gdmklax8ikir5t8jby6a.jpg');"></div>
@@ -478,6 +499,7 @@
     </div>
   </section>
 
+  <!-- SECTION 3: Wishes Card -->
   <section class="wish-box">
     <h2>A Special Wish For You 💖</h2>
     <p>
@@ -498,7 +520,7 @@
     }
     let autoSlideTimer = setInterval(nextSlide, 3800);
 
-    // 2. Audio Player with custom MP3 File
+    // 2. Audio Player with Cloudinary Audio Track
     const audio = document.getElementById('bg-music');
     const playBtn = document.getElementById('playBtn');
     const audioStatus = document.getElementById('audioStatus');
@@ -520,7 +542,7 @@
       isPlaying = !isPlaying;
     }
 
-    // Auto attempt play on first click anywhere (Browser Auto-play policy compatibility)
+    // Auto play on first touch/click anywhere on page
     document.body.addEventListener('click', () => {
       if (!isPlaying) {
         audio.play().then(() => {
